@@ -1,0 +1,71 @@
+{% extends 'D_Freedom_site/base.html' %}
+
+{% block title %}D-Custom - 料金{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">料金</h1>
+
+{% if request.user.is_staff %}
+<div class="alert alert-info mb-4">
+    <p class="mb-0">
+        <strong>管理者向け:</strong> 見積書を作成するには<a href="{% url 'D_Freedom_site:admin_create_estimate' %}">こちら</a>をクリックしてください。
+    </p>
+</div>
+{% endif %}
+
+<h4 class="mb-3">図面作成料金表</h4>
+
+{% if prices %}
+    <div class="table-responsive mb-4">
+        <table class="table table-bordered" style="border-collapse: collapse; width: 100%;">
+            <thead>
+                <tr style="background-color: #f5f5f5;">
+                    <th class="text-center" style="width: 15%; vertical-align: middle;">図面サイズ</th>
+                    <th class="text-center" style="width: 15%; vertical-align: middle;">料金（税別）</th>
+                    <th style="width: 70%; vertical-align: middle;">備考</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for price_item in prices %}
+                    <tr>
+                        <td class="text-center" style="vertical-align: middle;">{{ price_item.drawing_size }}</td>
+                        <td class="text-center" style="vertical-align: middle;">¥{{ price_item.price|stringformat:"s"|slice:":-3" }},{{ price_item.price|stringformat:"s"|slice:"-3:" }}</td>
+                        <td style="vertical-align: middle;">{{ price_item.note|default:"" }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    
+    <div class="mb-4">
+        <a href="{% url 'D_Freedom_site:contact' %}" class="btn btn-outline-primary">お問い合わせ</a>
+    </div>
+{% else %}
+    <div class="alert alert-info">
+        現在、料金情報はありません。詳細については直接お問い合わせください。
+    </div>
+    <a href="{% url 'D_Freedom_site:contact' %}" class="btn btn-primary">お問い合わせ</a>
+{% endif %}
+
+<div class="card mt-4">
+    <div class="card-body">
+        <h5 class="card-title">料金に関する注意事項</h5>
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">上記は基本料金です。プロジェクトの規模や複雑さによって変動する場合があります。</li>
+            <li class="list-group-item">料金はすべて税別表示です。</li>
+            <li class="list-group-item">お支払い方法は、現在銀行振込のみご利用いただけます。(クレジットカード対応予定)</li>
+            <li class="list-group-item">お見積りは無料です。お気軽にお問い合わせください。</li>
+        </ul>
+    </div>
+</div>
+
+<style>
+    .table th, .table td {
+        padding: 0.75rem;
+        border: 1px solid #dee2e6;
+    }
+    .table thead th {
+        border-bottom: 2px solid #dee2e6;
+    }
+</style>
+{% endblock %} 
